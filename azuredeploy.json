@@ -26,7 +26,7 @@
     {
       "type": "Microsoft.EventHub/namespaces",
       "apiVersion": "2018-01-01-preview",
-      "name": "[replace(variables('NewRGName'),'Tel', 'Tel-EvtHub')]",
+      "name": "[replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1')]",
       "location": "[resourceGroup().location]",
       "sku": {
         "name": "Standard",
@@ -81,10 +81,10 @@
     {
       "type": "Microsoft.EventHub/namespaces/AuthorizationRules",
       "apiVersion": "2017-04-01",
-      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub'), '/RootManageSharedAccessKey')]",
+      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1'), '/RootManageSharedAccessKey')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub')))]"
+        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1')))]"
       ],
       "properties": {
         "rights": [
@@ -97,10 +97,10 @@
     {
       "type": "Microsoft.EventHub/namespaces/eventhubs",
       "apiVersion": "2017-04-01",
-      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub'), '/aggregator-1')]",
+      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1'), '/aggregator-1')]",
       "location": "Central India",
       "dependsOn": [
-        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub')))]"
+        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1')))]"
       ],
       "properties": {
         "messageRetentionInDays": 3,
@@ -111,10 +111,10 @@
     {
       "type": "Microsoft.EventHub/namespaces/networkRuleSets",
       "apiVersion": "2018-01-01-preview",
-      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub'), '/default')]",
+      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1'), '/default')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub')))]"
+        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1')))]"
       ],
       "properties": {
         "defaultAction": "Deny",
