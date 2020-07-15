@@ -41,6 +41,23 @@
       }
     },
     {
+      "type": "Microsoft.EventHub/namespaces",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[replace(variables('NewRGName'),'Tel', 'Tel-EvtHub2')]",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard",
+        "tier": "Standard",
+        "capacity": 1
+      },
+      "properties": {
+        "zoneRedundant": false,
+        "isAutoInflateEnabled": false,
+        "maximumThroughputUnits": 0,
+        "kafkaEnabled": true
+      }
+    },
+    {
       "type": "Microsoft.Network/networkSecurityGroups",
       "apiVersion": "2019-09-01",
       "name": "[concat(variables('NewRGName'), '-NSG')]",
@@ -81,10 +98,26 @@
     {
       "type": "Microsoft.EventHub/namespaces/AuthorizationRules",
       "apiVersion": "2017-04-01",
-      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1'), '/RootManageSharedAccessKey')]",
+      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1'), '/RootManageSharedAccessKey1')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1')))]"
+      ],
+      "properties": {
+        "rights": [
+          "Listen",
+          "Manage",
+          "Send"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.EventHub/namespaces/AuthorizationRules",
+      "apiVersion": "2017-04-01",
+      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub2'), '/RootManageSharedAccessKey2')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub2')))]"
       ],
       "properties": {
         "rights": [
@@ -109,12 +142,40 @@
       }
     },
     {
+      "type": "Microsoft.EventHub/namespaces/eventhubs",
+      "apiVersion": "2017-04-01",
+      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub2'), '/aggregator-1')]",
+      "location": "Central India",
+      "dependsOn": [
+        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub2')))]"
+      ],
+      "properties": {
+        "messageRetentionInDays": 3,
+        "partitionCount": 32,
+        "status": "Active"
+      }
+    },
+    {
       "type": "Microsoft.EventHub/namespaces/networkRuleSets",
       "apiVersion": "2018-01-01-preview",
       "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1'), '/default')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1')))]"
+      ],
+      "properties": {
+        "defaultAction": "Deny",
+        "virtualNetworkRules": [],
+        "ipRules": []
+      }
+    },
+    {
+      "type": "Microsoft.EventHub/namespaces/networkRuleSets",
+      "apiVersion": "2018-01-01-preview",
+      "name": "[concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub2'), '/default')]",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.EventHub/namespaces', concat(replace(variables('NewRGName'),'Tel', 'Tel-EvtHub2')))]"
       ],
       "properties": {
         "defaultAction": "Deny",
