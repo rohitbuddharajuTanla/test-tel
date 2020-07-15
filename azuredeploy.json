@@ -26,7 +26,7 @@
     {
       "type": "Microsoft.EventHub/namespaces",
       "apiVersion": "2018-01-01-preview",
-      "name": "[replace(variables('NewRGName'),'Tel', 'Tel-EvtHub1')]",
+      "name": "Tel-EvtHub1",
       "location": "[resourceGroup().location]",
       "sku": {
         "name": "Standard",
@@ -43,7 +43,7 @@
     {
       "type": "Microsoft.EventHub/namespaces",
       "apiVersion": "2018-01-01-preview",
-      "name": "[replace(variables('NewRGName'),'Tel', 'Tel-EvtHub2')]",
+      "name": "Tel-EvtHub2",
       "location": "[resourceGroup().location]",
       "sku": {
         "name": "Standard",
