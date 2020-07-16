@@ -2,41 +2,35 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "projectName":{
+    "VnetAddressPrefix": {
       "type": "string",
+      "defaultValue": "172.24.0.0/21"
+    },
+    "servicePrincipalClientId": {
+      "type": "securestring",
       "metadata": {
-        "description": "Specifies a project name that is used to generate the Event Hub name and the Namespace name."
+        "description": "The Service Principal Client ID."
       }
     },
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
+    "servicePrincipalClientSecret": {
+      "type": "securestring",
       "metadata": {
-        "description": "Specifies the Azure location for all resources."
-      }
-    },
-    "eventHubSku": {
-      "type": "string",
-      "allowedValues": [ "Basic", "Standard" ],
-      "defaultValue": "Standard",
-      "metadata": {
-        "description": "Specifies the messaging tier for service Bus namespace."
+        "description": "The Service Principal Client Secret."
       }
     }
   },
   "variables": {
-    "eventHubNamespaceName": "[concat(parameters('projectName'), 'ns')]",
-    "eventHubName": "[parameters('projectName')]"
+    "NewRGName": "[replace(resourceGroup().name,'RG-', '')]"
   },
   "resources": [
     {
       "apiVersion": "2017-04-01",
       "type": "Microsoft.EventHub/namespaces",
-      "name": "[variables('eventHubNamespaceName')]",
-      "location": "[parameters('location')]",
+      "name": "[replace(variables('NewRGName'),'TEL', 'Tel-EvtHub-1')]",
+      "location": "[resourceGroup().location]",
       "sku": {
-        "name": "[parameters('eventHubSku')]",
-        "tier": "[parameters('eventHubSku')]",
+        "name": "Standard",
+        "tier": "Standard",
         "capacity": 1
       },
       "properties": {
@@ -47,24 +41,21 @@
     {
       "apiVersion": "2017-04-01",
       "type": "Microsoft.EventHub/namespaces/eventhubs",
-      "name": "[concat(variables('eventHubNamespaceName'), '/', variables('eventHubName'))]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.EventHub/namespaces', variables('eventHubNamespaceName'))]"
-      ],
+      "name": "[concat(replace(variables('NewRGName'),'TEL', 'Tel-EvtHub-1'), '/aggregator-1')]",
+      "location": "Central India",
       "properties": {
-        "messageRetentionInDays": 7,
-        "partitionCount": 1
+        "messageRetentionInDays": 3,
+        "partitionCount": 32
       }
     },
     {
       "apiVersion": "2017-04-01",
       "type": "Microsoft.EventHub/namespaces",
-      "name": "[variables('eventHubNamespaceName')]",
-      "location": "[parameters('location')]",
+      "name": "[replace(variables('NewRGName'),'TEL', 'Tel-EvtHub-2')]",
+      "location": "[resourceGroup().location]",
       "sku": {
-        "name": "[parameters('eventHubSku')]",
-        "tier": "[parameters('eventHubSku')]",
+        "name": "Standard",
+        "tier": "Standard",
         "capacity": 1
       },
       "properties": {
@@ -75,14 +66,11 @@
     {
       "apiVersion": "2017-04-01",
       "type": "Microsoft.EventHub/namespaces/eventhubs",
-      "name": "[concat(variables('eventHubNamespaceName'), '/', variables('eventHubName'))]",
-      "location": "[parameters('location')]",
-      "dependsOn": [
-        "[resourceId('Microsoft.EventHub/namespaces', variables('eventHubNamespaceName'))]"
-      ],
+      "name": "[concat(replace(variables('NewRGName'),'TEL', 'Tel-EvtHub-2'), '/aggregator-1')]",
+      "location": "Central India",
       "properties": {
-        "messageRetentionInDays": 7,
-        "partitionCount": 1
+        "messageRetentionInDays": 3,
+        "partitionCount": 32
       }
     }
   ]
